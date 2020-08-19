@@ -9,11 +9,18 @@
     "lint": "vue-cli-service lint"
   },
   "dependencies": {
+    "@material-ui/core": "^4.11.0",
+    "@types/react": "^16.9.46",
+    "@types/react-dom": "^16.9.8",
     "core-js": "^3.6.5",
+    "lowercase-keys": "^2.0.0",
+    "react": "^16.13.1",
+    "react-dom": "^16.13.1",
     "vue": "^2.6.11",
     "vue-class-component": "^7.2.3",
     "vue-property-decorator": "^8.4.2",
     "vue-router": "^3.2.0",
+    "vuera": "^0.2.7",
     "vuex": "^3.4.0"
   },
   "devDependencies": {

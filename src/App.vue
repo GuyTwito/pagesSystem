@@ -1,32 +1,62 @@
 <template>
   <div id="app">
-    <div id="nav">
-      <router-link to="/">Home</router-link> |
-      <router-link to="/about">About</router-link>
-    </div>
-    <router-view />
+    <Nav :links="links" :currentPage="routerPath" @choosePage="choosePage" />
+    <ReactWrapper
+      :currentPage="routerPath"
+      notFoundPage="notFound"
+      homePage="Home"
+    />
+    <router-view></router-view>
   </div>
 </template>
 
-<style lang="less">
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-}
+<script lang="ts">
+import { Component, Vue } from "vue-property-decorator";
+import router from "./router";
 
-#nav {
-  padding: 30px;
+import { Nav, ReactWrapper } from "./app/components";
+import pages, { AdditionalAttributes, homePage } from "./app/pages";
 
-  a {
-    font-weight: bold;
-    color: #2c3e50;
+@Component({
+  components: {
+    Nav,
+    ReactWrapper,
+  },
+})
+export default class App extends Vue {
+  private routerPath: string =
+    window.location.pathname === process.env.BASE_URL
+      ? process.env.BASE_URL
+      : // take the first element in the path
+        window.location.pathname
+          .split(process.env.BASE_URL)[1]
+          .split("/")[0]
+          .toLowerCase();
 
-    &.router-link-exact-active {
-      color: #42b983;
-    }
+  get links() {
+    const attrs = (pageLink: string) =>
+      pageLink in AdditionalAttributes ? AdditionalAttributes[pageLink] : {};
+    return Object.keys(pages)
+      .filter((pageLink) => !attrs(pageLink).hidden)
+      .map((pageLink) => {
+        return {
+          link: homePage === pageLink ? "/" : pageLink,
+          name: "name" in attrs(pageLink) ? attrs(pageLink).name : pageLink,
+        };
+      });
   }
+
+  choosePage(link: string) {
+    this.routerPath = link;
+    router.replace(link);
+  }
+}
+</script>
+
+<style scoped lang="less">
+#app {
+  position: fixed;
+  display: flex;
+  height: 100%;
 }
 </style>

@@ -1,5 +1,5 @@
 <template>
-  <div id="app">
+  <div>
       <ReactWrapper :currentPage=routerPath notFoundPage="notFound" homePage="home" />
   </div>
 </template>

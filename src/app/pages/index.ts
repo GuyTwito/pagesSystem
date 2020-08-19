@@ -8,21 +8,30 @@ const ReactComponents = {
   notFound: require("./vue_pages/NotFound").default,
 };
 
-export const AdditionalAttributes = lowercaseKeys({
+const AdditionalAttributes = lowercaseKeys({
+  Home: {
+    name: "Home",
+    isHome: true
+  },
   helloReact: {
     name: "Hello React"
   },
-  Home: {
-    name: "Home",
-    link: "/"
-  },
   notFound: {
-    hide: true,
-    link: "*"
+    hide: true
   },
-
-  
-
 });
+
+// make sure there is only one page defined "isHome" (the last one defined determines)
+let homePage = ""
+Object.keys(AdditionalAttributes).forEach((key) => {
+  const attr = AdditionalAttributes[key]
+  if(attr.isHome)
+    homePage = key
+})
+
+export {
+  AdditionalAttributes,
+  homePage
+}
 
 export default lowercaseKeys(ReactComponents);

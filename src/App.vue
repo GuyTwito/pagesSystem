@@ -11,7 +11,7 @@ import { Component, Vue } from 'vue-property-decorator';
 import router from "./router";
 
 import { Nav, ReactWrapper } from "./app/components";
-import pages, {AdditionalAttributes} from "./app/pages";
+import pages, { AdditionalAttributes, homePage } from "./app/pages";
 
 @Component({
   components: {
@@ -20,10 +20,10 @@ import pages, {AdditionalAttributes} from "./app/pages";
   },
 })
 export default class App extends Vue {
-    // take the first element in the path
-    private routerPath : string = window.location.pathname === process.env.BASE_URL ?
+  private routerPath : string = window.location.pathname === process.env.BASE_URL ?
         process.env.BASE_URL
         :
+        // take the first element in the path
         window.location.pathname.split(process.env.BASE_URL)[1].split('/')[0].toLowerCase();
 
     get links(){
@@ -35,8 +35,8 @@ export default class App extends Vue {
                     .filter((pageLink) => !attrs(pageLink).hide)
                     .map((pageLink) => {
                         return {
-                            link: "link" in attrs(pageLink) ? 
-                                    attrs(pageLink).link
+                            link: homePage === pageLink ? 
+                                    "/"
                                     :
                                     pageLink,
                             name:  "name" in attrs(pageLink) ? 

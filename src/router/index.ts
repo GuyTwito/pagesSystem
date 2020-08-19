@@ -1,14 +1,15 @@
 import Vue from "vue";
 import VueRouter, { RouteConfig } from "vue-router";
-import App from "../App.vue";
+
+import Main from "../app/Main.vue";
 
 Vue.use(VueRouter);
 
 const routes: Array<RouteConfig> = [
   {
-    path: "/",
-    name: "App",
-    component: App
+    path: `*`,
+    name: "page",
+    component: Main
   },
 ];
 

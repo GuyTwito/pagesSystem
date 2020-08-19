@@ -1,19 +1,17 @@
 <template>
   <div id="app">
-      <page-wrapper/>
+      <router-view></router-view>
   </div>
 </template>
 
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator';
-import PageWrapper from "./app/components/PageWrapper.vue";
+import router from "./router";
 
-@Component({
-    components: {
-        'page-wrapper': PageWrapper
-    }
-})
-export default class App extends Vue {}
+
+@Component
+export default class App extends Vue {
+}
 </script>
 
 <style>

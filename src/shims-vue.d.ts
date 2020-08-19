@@ -4,3 +4,4 @@ declare module "*.vue" {
 }
 
 declare module 'vuera'
+declare module 'lowercase-keys'

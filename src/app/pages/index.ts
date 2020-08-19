@@ -12,9 +12,15 @@ export const AdditionalAttributes = lowercaseKeys({
   helloReact: {
     name: "Hello React"
   },
+  Home: {
+    name: "Home",
+    link: "/"
+  },
   notFound: {
-    hide: true 
-  }
+    hide: true,
+    link: "*"
+  },
+
   
 
 });

@@ -1,6 +1,5 @@
 <template>
   <div>
-    ReactWrapper<br /><br />
     <component v-bind:is="currentPageFixed" />
   </div>
 </template>
@@ -19,11 +18,11 @@ export default class ReactWrapper extends Vue {
 
   get currentPageFixed() {
     const pageName = this.currentPage.toLowerCase();
-    if(pageName === "")
-      return this.homePage
+    if(pageName === "/")
+      return this.homePage.toLowerCase()
     if (Object.keys(pagesManage).map((page) => page.toLowerCase()).indexOf(pageName) !== -1)
       return pageName;
-    return this.notFoundPage;
+    return this.notFoundPage.toLowerCase();
   }
 }
 </script>

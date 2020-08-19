@@ -14,12 +14,16 @@ import pagesManage from "../pages";
 })
 export default class ReactWrapper extends Vue {
   @Prop() readonly currentPage!: string;
+  @Prop() readonly notFoundPage!: string;
+  @Prop() readonly homePage!: string;
 
   get currentPageFixed() {
     const pageName = this.currentPage.toLowerCase();
+    if(pageName === "")
+      return this.homePage
     if (Object.keys(pagesManage).map((page) => page.toLowerCase()).indexOf(pageName) !== -1)
       return pageName;
-    return "notfound";
+    return this.notFoundPage;
   }
 }
 </script>

@@ -1,11 +1,12 @@
 <template>
   <div id="app">
-      <ReactWrapper :currentPage="routerPath" />
+      <ReactWrapper :currentPage=routerPath notFoundPage="notFound" homePage="home" />
   </div>
 </template>
 
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator';
+
 import ReactWrapper from "./components/ReactWrapper.vue";
 
 @Component({
@@ -21,6 +22,3 @@ export default class Main extends Vue {
     }
 }
 </script>
-
-<style>
-</style>

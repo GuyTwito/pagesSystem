@@ -3,5 +3,5 @@ declare module "*.vue" {
   export default Vue;
 }
 
-declare module 'vuera'
-declare module 'lowercase-keys'
+declare module "vuera";
+declare module "lowercase-keys";

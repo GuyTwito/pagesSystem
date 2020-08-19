@@ -11,27 +11,23 @@ const ReactComponents = {
 const AdditionalAttributes = lowercaseKeys({
   Home: {
     name: "Home",
-    isHome: true
+    isHome: true,
   },
   helloReact: {
-    name: "Hello React"
+    name: "Hello React",
   },
   notFound: {
-    hide: true
+    hidden: true,
   },
 });
 
 // make sure there is only one page defined "isHome" (the last one defined determines)
-let homePage = ""
+let homePage = "";
 Object.keys(AdditionalAttributes).forEach((key) => {
-  const attr = AdditionalAttributes[key]
-  if(attr.isHome)
-    homePage = key
-})
+  const attr = AdditionalAttributes[key];
+  if (attr.isHome) homePage = key;
+});
 
-export {
-  AdditionalAttributes,
-  homePage
-}
+export { AdditionalAttributes, homePage };
 
 export default lowercaseKeys(ReactComponents);

@@ -1,13 +1,17 @@
 <template>
   <div id="app">
-    <Nav :links=links :currentPage=routerPath @choosePage="choosePage"/>
-    <ReactWrapper :currentPage=routerPath notFoundPage="notFound" homePage="Home" />
+    <Nav :links="links" :currentPage="routerPath" @choosePage="choosePage" />
+    <ReactWrapper
+      :currentPage="routerPath"
+      notFoundPage="notFound"
+      homePage="Home"
+    />
     <router-view></router-view>
   </div>
 </template>
 
 <script lang="ts">
-import { Component, Vue } from 'vue-property-decorator';
+import { Component, Vue } from "vue-property-decorator";
 import router from "./router";
 
 import { Nav, ReactWrapper } from "./app/components";
@@ -20,46 +24,39 @@ import pages, { AdditionalAttributes, homePage } from "./app/pages";
   },
 })
 export default class App extends Vue {
-  private routerPath : string = window.location.pathname === process.env.BASE_URL ?
-        process.env.BASE_URL
-        :
-        // take the first element in the path
-        window.location.pathname.split(process.env.BASE_URL)[1].split('/')[0].toLowerCase();
+  private routerPath: string =
+    window.location.pathname === process.env.BASE_URL
+      ? process.env.BASE_URL
+      : // take the first element in the path
+        window.location.pathname
+          .split(process.env.BASE_URL)[1]
+          .split("/")[0]
+          .toLowerCase();
 
-    get links(){
-        const attrs = (pageLink : string) => pageLink in AdditionalAttributes ?
-                        AdditionalAttributes[pageLink]
-                        :
-                        {}
-        return Object.keys(pages)
-                    .filter((pageLink) => !attrs(pageLink).hide)
-                    .map((pageLink) => {
-                        return {
-                            link: homePage === pageLink ? 
-                                    "/"
-                                    :
-                                    pageLink,
-                            name:  "name" in attrs(pageLink) ? 
-                                    attrs(pageLink).name
-                                    :
-                                    pageLink
-                        }
-                    })
-    }
+  get links() {
+    const attrs = (pageLink: string) =>
+      pageLink in AdditionalAttributes ? AdditionalAttributes[pageLink] : {};
+    return Object.keys(pages)
+      .filter((pageLink) => !attrs(pageLink).hidden)
+      .map((pageLink) => {
+        return {
+          link: homePage === pageLink ? "/" : pageLink,
+          name: "name" in attrs(pageLink) ? attrs(pageLink).name : pageLink,
+        };
+      });
+  }
 
-    choosePage (link : string) {
-        this.routerPath = link;
-        router.replace(link)
-    }
+  choosePage(link: string) {
+    this.routerPath = link;
+    router.replace(link);
+  }
 }
 </script>
 
 <style scoped lang="less">
-
-#app { 
-  position: fixed; 
+#app {
+  position: fixed;
   display: flex;
   height: 100%;
 }
-
 </style>

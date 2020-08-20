@@ -1,4 +1,4 @@
 import Nav from "./nav/Nav.vue";
-import ReactWrapper from "./ReactWrapper.vue";
+import PageWrapper from "./PageWrapper.vue";
 
-export { Nav, ReactWrapper };
+export { Nav, PageWrapper };

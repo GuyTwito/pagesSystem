@@ -1,7 +1,7 @@
 <template>
   <div id="app">
     <Nav :links="links" :currentPage="routerPath" @choosePage="choosePage" />
-    <ReactWrapper
+    <PageWrapper
       :currentPage="routerPath"
       notFoundPage="notFound"
       homePage="Home"
@@ -14,13 +14,13 @@
 import { Component, Vue } from "vue-property-decorator";
 import router from "./router";
 
-import { Nav, ReactWrapper } from "./app/components";
+import { Nav, PageWrapper } from "./app/components";
 import pages, { AdditionalAttributes, homePage } from "./app/pages";
 
 @Component({
   components: {
     Nav,
-    ReactWrapper,
+    PageWrapper,
   },
 })
 export default class App extends Vue {

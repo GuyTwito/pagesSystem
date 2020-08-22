@@ -1,14 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import ImageFocus from "./components/ImageFocus";
-import utils from '../utils'
-
-function getImages() {
-    function importAll(r: any) {
-        return r.keys().map(r);
-    }
-
-    return importAll(require.context('./images', false, /\.(png|jpe?g|svg)$/));
-}
+import { general } from '../../utils'
+import { apiActions } from '../../actions'
 
 type GalleryProps = {
     imgInRowByResolution: (x: number) => number,
@@ -46,9 +39,15 @@ const Gallery = ({ imgInRowByResolution, delayResize }: GalleryProps) => {
         }, delayResize)
     }
 
-    const fetchNextImages = () => {
-        return
+    const imagesFetched = (images: any) => {
+        setImages((currentImages) => currentImages.concat(images))
     }
+
+    const fetchNextImages = () => {
+        const searchQuery = ""
+        apiActions.getImages(searchQuery, imagesFetched, () => null)
+    }
+
 
     const checkBottom = (e: any) => {
         if (e.target.scrollHeight - e.target.scrollTop - 10 < e.target.clientHeight)
@@ -71,7 +70,7 @@ const Gallery = ({ imgInRowByResolution, delayResize }: GalleryProps) => {
     }
 
     useEffect(() => {
-        setImages(getImages())
+        fetchNextImages()
         computeImgInRow()
 
         window.addEventListener('resize', computeImgInRow)
@@ -102,9 +101,9 @@ const Gallery = ({ imgInRowByResolution, delayResize }: GalleryProps) => {
             }
             <div ref={galleryRef}>
                 {/* divide images to rows */}
-                {utils.range(Math.ceil(images.length / imgInRow)).map((rowIndex) =>
+                {general.range(Math.ceil(images.length / imgInRow)).map((rowIndex) =>
                     <div key={rowIndex}>
-                        {utils.range(imgInRow).map((colIndex) => {
+                        {general.range(imgInRow).map((colIndex) => {
                             const imageIndex = rowIndex * imgInRow + colIndex
                             const isImg = imageIndex < images.length
 

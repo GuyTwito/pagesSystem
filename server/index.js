@@ -14,7 +14,7 @@ function startServer() {
 
   if (process.env.NODE_ENV !== "production") {
     app.use((req, res, next) => {
-      const allowedOrigins = ["http://localhost:3001", ""];
+      const allowedOrigins = ["http://localhost:8080", "http://localhost:8081", ""];
       const origin = req.headers.origin;
       if (allowedOrigins.indexOf(origin) > -1) {
         res.setHeader("Access-Control-Allow-Origin", origin);

@@ -50,12 +50,17 @@ const Gallery = ({ imgInRowByResolution, delayResize }: GalleryProps) => {
         return
     }
 
+    const checkBottom = (e: any) => {
+        if (e.target.scrollHeight - e.target.scrollTop - 10 < e.target.clientHeight)
+            fetchNextImages()
+    }
+
     const imageClicked = (imgIndex: number) => setFocusImg(imgIndex)
     const unFocus = () => setFocusImg(-1)
     const nextImg = () => {
         if (focusImg === images.length - 1)
             return
-        if (focusImg > images.length - imgInRow)
+        if (focusImg + 1 === images.length - 1)
             fetchNextImages()
         setFocusImg(prevImg => prevImg + 1)
     }
@@ -70,11 +75,20 @@ const Gallery = ({ imgInRowByResolution, delayResize }: GalleryProps) => {
         computeImgInRow()
 
         window.addEventListener('resize', computeImgInRow)
-        return () => window.removeEventListener('resize', computeImgInRow);
+
+        return () => {
+            window.removeEventListener('resize', computeImgInRow);
+        }
     }, []);
 
     return (
-        <div style={{ backgroundColor: "#AAA", textAlign: "center", width: "100%" }}>
+        <div onScroll={checkBottom} style={{
+            height: "100%",
+            width: "100%",
+            backgroundColor: "#AAA",
+            textAlign: "center",
+            overflow: "auto"
+        }}>
             <h1>Welcome to the Gallery !</h1>
             <hr />
             {focusImg === -1

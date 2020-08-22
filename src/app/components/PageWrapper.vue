@@ -1,6 +1,6 @@
 <template>
   <div class="scrollable">
-    <component v-bind:is="currentPageFixed" />
+    <component v-bind:is="currentPageFixed" class="component" />
   </div>
 </template>
 
@@ -33,5 +33,10 @@ export default class PageWrapper extends Vue {
 <style scoped lang="less">
 .scrollable {
   overflow: auto;
+  width: 100%;
+}
+
+.component {
+  display: flex;
 }
 </style>

@@ -1,11 +1,7 @@
 <template>
   <div id="app">
     <Nav :links="links" :currentPage="routerPath" @choosePage="choosePage" />
-    <PageWrapper
-      :currentPage="routerPath"
-      notFoundPage="notFound"
-      homePage="Home"
-    />
+    <PageWrapper :currentPage="routerPath" notFoundPage="notFound" homePage="Home" />
     <router-view></router-view>
   </div>
 </template>
@@ -20,8 +16,8 @@ import pages, { AdditionalAttributes, homePage } from "./app/pages";
 @Component({
   components: {
     Nav,
-    PageWrapper,
-  },
+    PageWrapper
+  }
 })
 export default class App extends Vue {
   private routerPath: string =
@@ -37,11 +33,11 @@ export default class App extends Vue {
     const attrs = (pageLink: string) =>
       pageLink in AdditionalAttributes ? AdditionalAttributes[pageLink] : {};
     return Object.keys(pages)
-      .filter((pageLink) => !attrs(pageLink).hidden)
-      .map((pageLink) => {
+      .filter(pageLink => !attrs(pageLink).hidden)
+      .map(pageLink => {
         return {
           link: homePage === pageLink ? "/" : pageLink,
-          name: "name" in attrs(pageLink) ? attrs(pageLink).name : pageLink,
+          name: "name" in attrs(pageLink) ? attrs(pageLink).name : pageLink
         };
       });
   }
@@ -53,10 +49,35 @@ export default class App extends Vue {
 }
 </script>
 
-<style scoped lang="less">
+<style lang="less">
+.scrollbar {
+  float: left;
+  height: 30px;
+  background: #f5f5f5;
+  overflow: auto;
+}
+
+::-webkit-scrollbar-track {
+  -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
+  background-color: #f5f5f5;
+}
+
+::-webkit-scrollbar {
+  width: 10px;
+  background-color: #f5f5f5;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: #a19696;
+  border: 2px solid #555555;
+}
+
 #app {
   position: fixed;
+  left: 0;
+  top: 0;
   display: flex;
   height: 100%;
+  width: 100%;
 }
 </style>

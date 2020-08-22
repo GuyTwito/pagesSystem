@@ -1,8 +1,6 @@
 <template>
   <div>
-    <li :class="isChosen ? 'chosen' : ''" @click="choosePage(link)">
-      {{ name }}
-    </li>
+    <li :class="isChosen ? 'chosen' : ''" class="navItem" @click="choosePage(link)">{{ name }}</li>
   </div>
 </template>
 
@@ -28,5 +26,9 @@ li {
 
 .chosen {
   background-color: #ff0000;
+}
+
+.navItem {
+  padding: 5px;
 }
 </style>

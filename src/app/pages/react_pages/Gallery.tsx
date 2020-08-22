@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import ImageFocus from "./components/ImageFocus";
+import SearchBox from 'react-responsive-searchbox/lib/SearchBox';
 import { general } from '../../utils'
 import { apiActions } from '../../actions'
 
@@ -13,6 +14,7 @@ const Gallery = ({ imgInRowByResolution, delayResize }: GalleryProps) => {
     const [imgInRow, setImgInRow] = useState(1)
     const [imgSize, setImgSize] = useState('0px')
     const [focusImg, setFocusImg] = useState(-1)
+    const [searchQuery, setSearchQuery] = useState("")
 
     const galleryRef = useRef(null);
     let resizeTimeout: number;
@@ -44,7 +46,6 @@ const Gallery = ({ imgInRowByResolution, delayResize }: GalleryProps) => {
     }
 
     const fetchNextImages = () => {
-        const searchQuery = ""
         apiActions.getImages(searchQuery, imagesFetched, () => null)
     }
 
@@ -89,6 +90,17 @@ const Gallery = ({ imgInRowByResolution, delayResize }: GalleryProps) => {
             overflow: "auto"
         }}>
             <h1>Welcome to the Gallery !</h1>
+            <SearchBox
+                placeholder="Search"
+                value={searchQuery}
+                onchange={(e: any) => {
+                    const val = e.target.value
+                    setSearchQuery(val)
+                    if (val === "")
+                        fetchNextImages()
+                }}
+                OnSubmit={(e: any) => { e.preventDefault(); fetchNextImages() }}
+            />
             <hr />
             {focusImg === -1
                 ? null

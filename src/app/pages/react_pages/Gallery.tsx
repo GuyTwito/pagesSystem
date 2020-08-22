@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
+import utils from '../utils'
 
 function getImages() {
     function importAll(r: any) {
@@ -9,51 +10,78 @@ function getImages() {
 }
 
 type GalleryProps = {
-    imagesOnRow: number,
-    imgSizeByResolution: (x: number) => number,
+    imgInRowByResolution: (x: number) => number,
     delayResize: number
 }
 
-const Gallery = ({ imagesOnRow, imgSizeByResolution, delayResize }: GalleryProps) => {
+const Gallery = ({ imgInRowByResolution, delayResize }: GalleryProps) => {
     const [images, setImages] = useState([])
-    const [imgSize, setImgSize] = useState('0%')
-    let updateImgSizeTimeout: number;
+    const [imgInRow, setImgInRow] = useState(1)
+    const [imgSize, setImgSize] = useState('0px')
 
-    const computeImgSize = () => {
-        const computedImgSize = `${100 / (
-            imagesOnRow
-                ? imagesOnRow
-                : imgSizeByResolution(window.innerWidth)
-        )}%`
+    const galleryRef = useRef(null);
+    let resizeTimeout: number;
+    let lastResize: number;
 
-        if (computedImgSize !== imgSize) {
-            if (updateImgSizeTimeout)
-                clearTimeout(updateImgSizeTimeout);
-            updateImgSizeTimeout = setTimeout(() => setImgSize(computedImgSize), delayResize)
-        }
+    const imgMargin = 3
+    const imgBorderWidth = 1
+
+    const computeImgInRow = () => {
+        const computedImgInRow = imgInRowByResolution(window.innerWidth)
+        // not rendering for every resize, for performance
+        if (resizeTimeout)
+            clearTimeout(resizeTimeout);
+        resizeTimeout = setTimeout(() => {
+            if (computedImgInRow !== lastResize) {
+                lastResize = computedImgInRow
+                setImgInRow(computedImgInRow)
+            }
+
+            setImgSize(`${!galleryRef.current
+                ? 0
+                : (galleryRef.current!["clientWidth"] * 0.95) * (1 / computedImgInRow) - imgMargin * 2 - imgBorderWidth * 2}px`
+            )
+        }, delayResize)
     }
 
     useEffect(() => {
         setImages(getImages())
-        computeImgSize()
+        computeImgInRow()
 
-        window.addEventListener('resize', computeImgSize)
-        return () => window.removeEventListener('resize', computeImgSize);
+        window.addEventListener('resize', computeImgInRow)
+        return () => window.removeEventListener('resize', computeImgInRow);
     }, []);
 
     return (
-        <div>
+        <div style={{ backgroundColor: "#AAA", textAlign: "center", width: "100%" }}>
             <h1>Welcome to the Gallery !</h1>
-            <div>
-                {images.map((image, i) =>
-                    <img key={i} alt={image} src={image} width={imgSize} ></img>
+            <hr />
+            <div ref={galleryRef}>
+                {/* divide images to rows */}
+                {utils.range(Math.ceil(images.length / imgInRow)).map((rowIndex) =>
+                    <div key={rowIndex}>
+                        {utils.range(imgInRow).map((colIndex) => {
+                            const imageIndex = rowIndex * imgInRow + colIndex
+                            const isImg = imageIndex < images.length
+
+                            return <img key={imageIndex} alt={isImg ? images[imageIndex] : ""} src={isImg ? images[imageIndex] : images[0]}
+                                style={{
+                                    width: imgSize,
+                                    height: imgSize,
+                                    margin: `${imgMargin}px`,
+                                    border: `${imgBorderWidth}px solid ${isImg ? "#000" : "transparent"}`,
+                                    visibility: isImg ? undefined : "hidden"
+                                }}
+                            ></img>
+                        })}
+                    </div>
                 )}
             </div>
         </div>
     );
 };
 
-const imgSizeByResolutionDefault = (resolution: number): number => {
+const imgInRowByResolutionDefault = (resolution: number): number => {
     if (resolution <= 480)
         return 1
     if (resolution < 640)
@@ -66,8 +94,8 @@ const imgSizeByResolutionDefault = (resolution: number): number => {
 }
 
 Gallery.defaultProps = {
-    imgSizeByResolution: imgSizeByResolutionDefault,
-    delayResize: 100
+    imgInRowByResolution: imgInRowByResolutionDefault,
+    delayResize: 10
 }
 
 export default Gallery;

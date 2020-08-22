@@ -1,11 +1,11 @@
 import globals from '../shared/globals'
 import { apiCall, userAlert } from '../utils'
 
-const { backend_api } = globals
+const { backendApi } = globals
 
 const getImages = (searchQuery: string, onSuccess: (res: any) => void, onError: () => void) => {
 
-    apiCall.call(`${backend_api}/get_images${searchQuery ? "/" + searchQuery : ""}`)
+    apiCall.call(`${backendApi}/get_images${searchQuery ? "/" + searchQuery : ""}`)
         .then((res: any) => {
             onSuccess(res)
         })

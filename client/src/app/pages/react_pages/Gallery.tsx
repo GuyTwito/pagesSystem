@@ -108,7 +108,12 @@ const Gallery = ({ imgInRowByResolution, delayResize }: GalleryProps) => {
             textAlign: "center",
             overflow: "auto"
         }}>
-            <h1>Welcome to the Gallery !</h1>
+            <h1 style={{
+                fontFamily: "'Droid serif', serif; font-size",
+                fontSize: "40px",
+                fontWeight: "bold",
+                color: "#b48608"
+            }}>Welcome to the Gallery !</h1>
 
             <SearchBox
                 placeholder="Search"
@@ -123,16 +128,6 @@ const Gallery = ({ imgInRowByResolution, delayResize }: GalleryProps) => {
             />
 
             <hr />
-
-            {focusImg === -1
-                ? null
-                : <ImageFocus
-                    unFocus={unFocus}
-                    prev={prevImg}
-                    next={nextImg}
-                    imgSrc={images[Math.min(focusImg, images.length - 1)]}
-                />
-            }
 
             <div ref={galleryRef}>
                 {/* divide images to rows */}
@@ -159,6 +154,16 @@ const Gallery = ({ imgInRowByResolution, delayResize }: GalleryProps) => {
                     </div>
                 )}
             </div>
+
+            {focusImg === -1
+                ? null
+                : <ImageFocus
+                    unFocus={unFocus}
+                    prev={prevImg}
+                    next={nextImg}
+                    imgSrc={images[Math.min(focusImg, images.length - 1)]}
+                />
+            }
 
         </div>
     );

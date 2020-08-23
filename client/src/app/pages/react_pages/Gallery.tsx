@@ -104,7 +104,7 @@ const Gallery = ({ imgInRowByResolution, delayResize }: GalleryProps) => {
         <div onScroll={checkBottom} style={{
             height: "100%",
             width: "100%",
-            backgroundColor: "#AAA",
+            backgroundColor: "#DDD",
             textAlign: "center",
             overflow: "auto"
         }}>
@@ -125,6 +125,12 @@ const Gallery = ({ imgInRowByResolution, delayResize }: GalleryProps) => {
                         fetchNextImages(true)
                 }}
                 OnSubmit={(e: any) => { e.preventDefault(); fetchNextImages(true) }}
+                searchButtonStyles={{
+                    background: "#999",
+                    boxShadow: "0 0 5px -1px rgba(0,0,0,0.2)",
+                    cursor: "pointer",
+                    border: "1px solid black"
+                }}
             />
 
             <hr />

@@ -1,6 +1,6 @@
 <template>
   <div>
-    <nav class="scrollbar">
+    <nav class="navbar scrollbar">
       <ul>
         <NavItem
           v-for="(link, i) in this.links"
@@ -51,5 +51,9 @@ ul {
   margin: 0;
   padding: 0;
   direction: ltr;
+}
+
+.navbar {
+  background-color: #ffffff;
 }
 </style>

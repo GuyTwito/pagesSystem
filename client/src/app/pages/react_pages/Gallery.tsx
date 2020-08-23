@@ -16,10 +16,10 @@ const Gallery = ({ imgInRowByResolution, delayResize }: GalleryProps) => {
     const [focusImg, setFocusImg] = useState(-1)
     const [searchQuery, setSearchQuery] = useState("")
     const [searchQueryInput, setSearchQueryInput] = useState("")
-    const [searchPage, setSearchPage] = useState(1)
+    const [searchPage, setSearchPage] = useState(0)
 
     const galleryRef = useRef(null);
-    let resizeTimeout: number;
+    let resizeTimeout = setTimeout(() => null, 0);
     let lastResize: number;
 
     const imgMargin = 3
@@ -44,7 +44,6 @@ const Gallery = ({ imgInRowByResolution, delayResize }: GalleryProps) => {
     }
 
     const imagesFetched = (images: any, fetchNextImages: () => void) => {
-        setSearchPage(currentSearchPage => currentSearchPage + 1)
         setImages((currentImages) => currentImages.concat(images))
 
         if (galleryRef.current)
@@ -53,14 +52,24 @@ const Gallery = ({ imgInRowByResolution, delayResize }: GalleryProps) => {
     }
 
     const fetchNextImages = (isNewQuery = false) => {
-        if (isNewQuery && searchQuery !== searchQueryInput) {
-            setImages((currentImages) => [])
-            setSearchQuery(currentSearchQuery => searchQueryInput)
-            setSearchPage(currentSearchPage => 1)
-        }
-        apiActions.getImages(searchQuery, searchPage, (images: any) => imagesFetched(images, fetchNextImages), () => null)
+        if (isNewQuery && searchQuery !== searchQueryInput)
+            setSearchQuery(searchQueryInput)
+        else
+            setSearchPage(currentSearchPage => currentSearchPage + 1)
     }
 
+    useEffect(() => {
+        setImages([])
+    }, [searchQuery]);
+
+    useEffect(() => {
+        if (images.length === 0)
+            setSearchPage(1)
+    }, [images]);
+
+    useEffect(() => {
+        apiActions.getImages(searchQuery, searchPage, (images: any) => imagesFetched(images, fetchNextImages), () => null)
+    }, [searchPage]);
 
     const checkBottom = (e: any) => {
         if (e.target.scrollHeight - e.target.scrollTop - 10 < e.target.clientHeight)
@@ -100,6 +109,7 @@ const Gallery = ({ imgInRowByResolution, delayResize }: GalleryProps) => {
             overflow: "auto"
         }}>
             <h1>Welcome to the Gallery !</h1>
+
             <SearchBox
                 placeholder="Search"
                 value={searchQueryInput}
@@ -111,16 +121,19 @@ const Gallery = ({ imgInRowByResolution, delayResize }: GalleryProps) => {
                 }}
                 OnSubmit={(e: any) => { e.preventDefault(); fetchNextImages(true) }}
             />
+
             <hr />
+
             {focusImg === -1
                 ? null
                 : <ImageFocus
                     unFocus={unFocus}
                     prev={prevImg}
                     next={nextImg}
-                    imgSrc={images[Math.min(focusImg, images.length)]}
+                    imgSrc={images[Math.min(focusImg, images.length - 1)]}
                 />
             }
+
             <div ref={galleryRef}>
                 {/* divide images to rows */}
                 {general.range(Math.ceil(images.length / imgInRow)).map((rowIndex) =>
@@ -146,6 +159,7 @@ const Gallery = ({ imgInRowByResolution, delayResize }: GalleryProps) => {
                     </div>
                 )}
             </div>
+
         </div>
     );
 };

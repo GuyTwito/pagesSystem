@@ -1,5 +1,6 @@
 {
     "port": 3001,
+    "cacheTTL": 60,
     "flickrKey": "383bcfbb6b3adb44d925b597c01f8bba",
     "flickrSecret": "b0ea575ec3b9d27a"
 }

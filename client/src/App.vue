@@ -25,7 +25,7 @@ export default class App extends Vue {
       ? process.env.BASE_URL
       : // take the first element in the path
         window.location.pathname
-          .split(process.env.BASE_URL)[1]
+          .split(process.env.BASE_URL || "/")[1]
           .split("/")[0]
           .toLowerCase();
 

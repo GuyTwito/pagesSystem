@@ -22,13 +22,19 @@ export default class NavItem extends Vue {
 <style scoped lang="less">
 li {
   border: 1px solid;
+  &:hover {
+    background-color: #acacac;
+  }
 }
 
 .chosen {
-  background-color: #ff0000;
+  background-color: #dc143c;
 }
 
 .navItem {
   padding: 5px;
+  margin: 4px;
+  border-radius: 30px;
+  box-shadow: 1px 2px #888888;
 }
 </style>

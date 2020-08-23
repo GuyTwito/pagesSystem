@@ -15,9 +15,11 @@ const Gallery = ({ imgInRowByResolution, delayResize }: GalleryProps) => {
     const [imgSize, setImgSize] = useState('0px')
     const [focusImg, setFocusImg] = useState(-1)
     const [searchQuery, setSearchQuery] = useState("")
+    const [searchQueryInput, setSearchQueryInput] = useState("")
+    const [searchPage, setSearchPage] = useState(0)
 
     const galleryRef = useRef(null);
-    let resizeTimeout: number;
+    let resizeTimeout = setTimeout(() => null, 0);
     let lastResize: number;
 
     const imgMargin = 3
@@ -41,14 +43,33 @@ const Gallery = ({ imgInRowByResolution, delayResize }: GalleryProps) => {
         }, delayResize)
     }
 
-    const imagesFetched = (images: any) => {
+    const imagesFetched = (images: any, fetchNextImages: () => void) => {
         setImages((currentImages) => currentImages.concat(images))
+
+        if (galleryRef.current)
+            if (galleryRef.current!["clientHeight"] < window.innerHeight)
+                fetchNextImages()
     }
 
-    const fetchNextImages = () => {
-        apiActions.getImages(searchQuery, imagesFetched, () => null)
+    const fetchNextImages = (isNewQuery = false) => {
+        if (isNewQuery && searchQuery !== searchQueryInput)
+            setSearchQuery(searchQueryInput)
+        else
+            setSearchPage(currentSearchPage => currentSearchPage + 1)
     }
 
+    useEffect(() => {
+        setImages([])
+    }, [searchQuery]);
+
+    useEffect(() => {
+        if (images.length === 0)
+            setSearchPage(1)
+    }, [images]);
+
+    useEffect(() => {
+        apiActions.getImages(searchQuery, searchPage, (images: any) => imagesFetched(images, fetchNextImages), () => null)
+    }, [searchPage]);
 
     const checkBottom = (e: any) => {
         if (e.target.scrollHeight - e.target.scrollTop - 10 < e.target.clientHeight)
@@ -59,8 +80,6 @@ const Gallery = ({ imgInRowByResolution, delayResize }: GalleryProps) => {
     const unFocus = () => setFocusImg(-1)
     const nextImg = () => {
         if (focusImg === images.length - 1)
-            return
-        if (focusImg + 1 === images.length - 1)
             fetchNextImages()
         setFocusImg(prevImg => prevImg + 1)
     }
@@ -90,27 +109,31 @@ const Gallery = ({ imgInRowByResolution, delayResize }: GalleryProps) => {
             overflow: "auto"
         }}>
             <h1>Welcome to the Gallery !</h1>
+
             <SearchBox
                 placeholder="Search"
-                value={searchQuery}
+                value={searchQueryInput}
                 onchange={(e: any) => {
                     const val = e.target.value
-                    setSearchQuery(val)
+                    setSearchQueryInput(val)
                     if (val === "")
-                        fetchNextImages()
+                        fetchNextImages(true)
                 }}
-                OnSubmit={(e: any) => { e.preventDefault(); fetchNextImages() }}
+                OnSubmit={(e: any) => { e.preventDefault(); fetchNextImages(true) }}
             />
+
             <hr />
+
             {focusImg === -1
                 ? null
                 : <ImageFocus
                     unFocus={unFocus}
                     prev={prevImg}
                     next={nextImg}
-                    imgSrc={images[focusImg]}
+                    imgSrc={images[Math.min(focusImg, images.length - 1)]}
                 />
             }
+
             <div ref={galleryRef}>
                 {/* divide images to rows */}
                 {general.range(Math.ceil(images.length / imgInRow)).map((rowIndex) =>
@@ -136,6 +159,7 @@ const Gallery = ({ imgInRowByResolution, delayResize }: GalleryProps) => {
                     </div>
                 )}
             </div>
+
         </div>
     );
 };

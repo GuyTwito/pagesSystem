@@ -3,9 +3,8 @@ import { apiCall, userAlert } from '../utils'
 
 const { backendApi } = globals
 
-const getImages = (searchQuery: string, onSuccess: (res: any) => void, onError: () => void) => {
-
-    apiCall.call(`${backendApi}/get_images${searchQuery ? "/" + searchQuery : ""}`)
+const getImages = (searchQuery: string, page: number, onSuccess: (res: any) => void, onError: () => void) => {
+    apiCall.call(`${backendApi}/flickr/search_images/${page}/${searchQuery ? searchQuery : ""}`)
         .then((res: any) => {
             onSuccess(res)
         })

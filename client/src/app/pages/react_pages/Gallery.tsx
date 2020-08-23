@@ -104,11 +104,16 @@ const Gallery = ({ imgInRowByResolution, delayResize }: GalleryProps) => {
         <div onScroll={checkBottom} style={{
             height: "100%",
             width: "100%",
-            backgroundColor: "#AAA",
+            backgroundColor: "#DDD",
             textAlign: "center",
             overflow: "auto"
         }}>
-            <h1>Welcome to the Gallery !</h1>
+            <h1 style={{
+                fontFamily: "'Droid serif', serif; font-size",
+                fontSize: "40px",
+                fontWeight: "bold",
+                color: "#b48608"
+            }}>Welcome to the Gallery !</h1>
 
             <SearchBox
                 placeholder="Search"
@@ -120,19 +125,15 @@ const Gallery = ({ imgInRowByResolution, delayResize }: GalleryProps) => {
                         fetchNextImages(true)
                 }}
                 OnSubmit={(e: any) => { e.preventDefault(); fetchNextImages(true) }}
+                searchButtonStyles={{
+                    background: "#999",
+                    boxShadow: "0 0 5px -1px rgba(0,0,0,0.2)",
+                    cursor: "pointer",
+                    border: "1px solid black"
+                }}
             />
 
             <hr />
-
-            {focusImg === -1
-                ? null
-                : <ImageFocus
-                    unFocus={unFocus}
-                    prev={prevImg}
-                    next={nextImg}
-                    imgSrc={images[Math.min(focusImg, images.length - 1)]}
-                />
-            }
 
             <div ref={galleryRef}>
                 {/* divide images to rows */}
@@ -159,6 +160,16 @@ const Gallery = ({ imgInRowByResolution, delayResize }: GalleryProps) => {
                     </div>
                 )}
             </div>
+
+            {focusImg === -1
+                ? null
+                : <ImageFocus
+                    unFocus={unFocus}
+                    prev={prevImg}
+                    next={nextImg}
+                    imgSrc={images[Math.min(focusImg, images.length - 1)]}
+                />
+            }
 
         </div>
     );

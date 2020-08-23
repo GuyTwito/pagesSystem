@@ -1,7 +1,7 @@
 <template>
   <div id="app">
     <Nav :links="links" :currentPage="routerPath" @choosePage="choosePage" />
-    <PageWrapper :currentPage="routerPath" notFoundPage="notFound" homePage="Home" />
+    <PageWrapper :currentPage="routerPath" notFoundPage="notFound" :homePage="homePageName" />
     <router-view></router-view>
   </div>
 </template>
@@ -20,12 +20,13 @@ import pages, { AdditionalAttributes, homePage } from "./app/pages";
   }
 })
 export default class App extends Vue {
+  private homePageName: string = homePage;
   private routerPath: string =
     window.location.pathname === process.env.BASE_URL
       ? process.env.BASE_URL
       : // take the first element in the path
         window.location.pathname
-          .split(process.env.BASE_URL)[1]
+          .split(process.env.BASE_URL || "/")[1]
           .split("/")[0]
           .toLowerCase();
 
@@ -36,7 +37,7 @@ export default class App extends Vue {
       .filter(pageLink => !attrs(pageLink).hidden)
       .map(pageLink => {
         return {
-          link: homePage === pageLink ? "/" : pageLink,
+          link: this.homePageName === pageLink ? "/" : pageLink,
           name: "name" in attrs(pageLink) ? attrs(pageLink).name : pageLink
         };
       });
